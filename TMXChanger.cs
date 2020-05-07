@@ -11,8 +11,9 @@ namespace TMXText2Tag
 {
     public class TMXChanger
     {
-        Regex regTag = new Regex(@"(\\\\\\\\|\$)?\{[^{}]+\}", RegexOptions.Compiled);
-        Regex regTag2 = new Regex(@"(\\[nrt])+", RegexOptions.Compiled);
+        //Regex regTag = new Regex(@"(\\\\\\\\|\$)?\{[^{}]+\}", RegexOptions.Compiled);
+        Regex regTag = new Regex(@"(\\\\\\\\|\$)?\{\d+\}", RegexOptions.Compiled);
+        //Regex regTag2 = new Regex(@"(\\[nrt])+", RegexOptions.Compiled);
 
         public void ChangeTMX(string tmxFile)
         {
@@ -30,10 +31,12 @@ namespace TMXText2Tag
                 if (sourceSegElement.Descendants("ph").Count<XElement>() > 0)
                 {
                     log.WriteLine(tuElement.ToString());
+
+                    tuElement.Value = "";
                 }
                 else
                 {
-                 
+
                     ////////////////REG1
                     if (regTag.IsMatch(sourceSegElement.InnerXml()))
                     {
@@ -43,7 +46,7 @@ namespace TMXText2Tag
                         string sourceResult = sourceSegElement.InnerXml();
                         string targetResult = targetSegElement.InnerXml();
 
-                        MatchCollection mc= regTag.Matches(sourceResult);
+                        MatchCollection mc = regTag.Matches(sourceResult);
                         int loop = mc.Count;
 
                         for (int i = 0; i < loop; i++)
@@ -65,7 +68,12 @@ namespace TMXText2Tag
                         sourceSegElement.Add(new XCData(sourceResult));
                         targetSegElement.Add(new XCData(targetResult));
                     }
+                    else
+                    {
+                        tuElement.Value = "";
+                    }
                     ///////////REG2
+                    /*
                     //1
                     if (regTag2.IsMatch(sourceSegElement.InnerXml()))
                     {
@@ -97,8 +105,9 @@ namespace TMXText2Tag
                         sourceSegElement.Add(new XCData(sourceResult));
                         targetSegElement.Add(new XCData(targetResult));
                     }
-
+                    */
                     /////////FIX Source
+                    /*
                     string sourceStrResult = sourceSegElement.InnerXml();
                     //string targetStrResult = targetSegElement.InnerXml();
 
@@ -112,6 +121,7 @@ namespace TMXText2Tag
                     //targetSegElement.Value = string.Empty;
                     sourceSegElement.Add(new XCData(sourceStrResult));
                     //targetSegElement.Add(new XCData(targetStrResult));
+                    */
                 }
                 
             }
